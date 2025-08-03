@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dil Öğrenme Paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1.5rem;
+        }
+
+        .logo h1 {
+            color: #4a5568;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-card h2 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-card p {
+            color: #718096;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 0.5rem;
+        }
+
+        /* Roleplay Styles */
+        .roleplay-section {
+            margin: 1.5rem 0;
+        }
+
+        .setup-form {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .form-select,
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-select:focus,
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .roleplay-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            width: 100%;
+        }
+
+        .roleplay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .chat-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-box {
+            height: 300px;
+            padding: 1rem;
+            overflow-y: auto;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+
+
+        .chat-controls {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            background: #f8fafc;
+        }
+
+        .mic-btn,
+        .reset-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mic-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .mic-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .mic-btn.active {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.4);
+        }
+
+        /* Level Test Styles */
+        .level-test-section {
+            margin: 1.5rem 0;
+        }
+
+        .test-info {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .test-info h4 {
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .test-info ul {
+            text-align: left;
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .test-info li {
+            margin-bottom: 0.5rem;
+            color: #718096;
+        }
+
+        .level-test-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .level-test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .test-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-header {
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-progress {
+            flex: 1;
+        }
+
+        .test-progress span {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .test-level {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .level-chat-box {
+            height: 300px;
+            padding: 1rem;
+            overflow-y: auto;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .level-chat-controls {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            background: #f8fafc;
+        }
+
+        .answer-btn,
+        .stop-btn,
+        .level-reset-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .answer-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .answer-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+            color: white;
+        }
+
+        .stop-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+        }
+
+        .level-reset-btn {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .level-reset-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(237, 137, 54, 0.4);
+        }
+
+        .results-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-container h3 {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-level {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1000;
+                height: 100vh;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .chat-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <h1>🎯 DilPanel</h1>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#home" class="nav-link active" data-section="home">
+                    <span class="nav-icon">🏠</span>
+                    Ana Sayfa
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#vocablitz" class="nav-link" data-section="vocablitz">
+                    <span class="nav-icon">📚</span>
+                    VocabLitz
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#sentence-master" class="nav-link" data-section="sentence-master">
+                    <span class="nav-icon">💬</span>
+                    Cümle Ustası
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#pronunciation" class="nav-link" data-section="pronunciation">
+                    <span class="nav-icon">🎤</span>
+                    Pronunciation Master
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#grammar" class="nav-link" data-section="grammar">
+                    <span class="nav-icon">📝</span>
+                    Grammar Type
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#roleplay" class="nav-link" data-section="roleplay">
+                    <span class="nav-icon">🎭</span>
+                    Role Play
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#tests" class="nav-link" data-section="tests">
+                    <span class="nav-icon">📋</span>
+                    Testler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#level-test" class="nav-link" data-section="level-test">
+                    <span class="nav-icon">📊</span>
+                    Seviyeni Ölç
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#ai-plan" class="nav-link" data-section="ai-plan">
+                    <span class="nav-icon">🤖</span>
+                    AI ile Planla
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <!-- Ana Sayfa -->
+        <div id="home" class="content-section active">
+            <div class="welcome-card">
+                <h2>🎯 Dil Öğrenme Yolculuğuna Hoş Geldin!</h2>
+                <p>Sol menüden istediğin aktiviteyi seç ve dil becerilerini geliştirmeye başla. Her bölüm seni farklı
+                    bir yönde geliştirecek!</p>
+                <button class="start-btn">Hemen Başla</button>
+            </div>
+        </div>
+
+        <!-- VocabLitz -->
+        <div id="vocablitz" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">📚</span>
+                    VocabLitz - Kelime Hazinesi
+                </h3>
+                <p>Kelime bilgini test et ve yeni kelimeler öğren!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">247</div>
+                        <div class="stat-label">Öğrenilen Kelime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Doğruluk Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cümle Ustası -->
+        <div id="sentence-master" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">💬</span>
+                    Cümle Ustası
+                </h3>
+                <p>Cümle kurma becerilerini geliştir ve dilbilgisi kurallarını pekiştir!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Tamamlanan Cümle</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">78%</div>
+                        <div class="stat-label">Başarı Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pronunciation Master -->
+        <div id="pronunciation" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">🎤</span>
+                    Pronunciation Master
+                </h3>
+                <p>Telaffuz becerilerini geliştir ve doğru sesleri öğren!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 30%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label">Pratik Yapılan Ses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">92%</div>
+                        <div class="stat-label">Doğruluk Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grammar Type -->
+        <div id="grammar" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">📝</span>
+                    Grammar Type
+                </h3>
+                <p>Dilbilgisi kurallarını hızlı yazma ile pekiştir!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 55%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">203</div>
+                        <div class="stat-label">Yazılan Cümle</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">88%</div>
+                        <div class="stat-label">Doğruluk Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role Play -->
+        <div id="roleplay" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">🎭</span>
+                    Role Play - AI Konuşma Pratiği
+                </h3>
+                <p>AI ile gerçek hayat durumlarında konuşma pratiği yap!</p>
+
+                <!-- Roleplay Setup -->
+                <div id="roleplay-setup" class="roleplay-section">
+                    <div class="setup-form">
+                        <div class="form-group">
+                            <label for="level">Seviyenizi Seçin:</label>
+                            <select id="level" class="form-select">
+                                <option value="A1">A1 - Başlangıç</option>
+                                <option value="A2">A2 - Temel</option>
+                                <option value="B1">B1 - Orta Altı</option>
+                                <option value="B2">B2 - Orta</option>
+                                <option value="C1">C1 - İleri</option>
+                                <option value="C2">C2 - Uzman</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prompt">Roleplay Senaryosunu Açıklayın:</label>
+                            <input type="text" id="prompt" class="form-input"
+                                placeholder="Örn: Ben turistim, sen otel görevlisisin" />
+                        </div>
+
+                        <button onclick="startRoleplay()" class="roleplay-btn">
+                            🎭 Roleplay'i Başlat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Interface -->
+                <div id="roleplay-chat" class="roleplay-section" style="display:none;">
+                    <div class="chat-container">
+                        <div id="chat-box" class="chat-box"></div>
+                        <div class="chat-controls">
+                            <button onclick="toggleMic()" class="mic-btn" id="mic-btn">
+                                🎙️ Mikrofonu Aç
+                            </button>
+                            <button onclick="resetRoleplay()" class="reset-btn">
+                                🔄 Yeniden Başlat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Tamamlanan Senaryo</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Memnuniyet Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testler -->
+        <div id="tests" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">📋</span>
+                    Testler
+                </h3>
+                <p>Bilgilerini test et ve gelişimini takip et!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 70%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Tamamlanan Test</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">82%</div>
+                        <div class="stat-label">Ortalama Puan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seviyeni Ölç -->
+        <div id="level-test" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Seviyeni Ölç - AI Speaking Testi
+                </h3>
+                <p>AI ile konuşarak İngilizce seviyeni öğren!</p>
+
+                <!-- Test Setup -->
+                <div id="level-test-setup" class="level-test-section">
+                    <div class="test-info">
+                        <h4>🎯 Speaking Testi Nasıl Çalışır?</h4>
+                        <ul>
+                            <li>AI sana farklı seviyelerde sorular soracak</li>
+                            <li>Cevaplarına göre seviyeni belirleyecek</li>
+                            <li>Test yaklaşık 5-10 dakika sürer</li>
+                            <li>Doğal konuşma tarzında cevap ver</li>
+                        </ul>
+                        <button onclick="startLevelTest()" class="level-test-btn">
+                            🎤 Speaking Testini Başlat
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Test Interface -->
+                <div id="level-test-chat" class="level-test-section" style="display:none;">
+                    <div class="test-container">
+                        <div class="test-header">
+                            <div class="test-progress">
+                                <span id="current-question">Soru 1/5</span>
+                                <div class="progress-bar">
+                                    <div id="test-progress-fill" class="progress-fill" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <div class="test-level">
+                                <span id="current-level">A1</span>
+                            </div>
+                        </div>
+                        <div id="level-chat-box" class="level-chat-box"></div>
+                        <div class="level-chat-controls">
+                            <button onclick="startAnswering()" class="answer-btn" id="answer-btn" disabled>
+                                🎤 Yanıtlamaya Başla
+                            </button>
+                            <button onclick="stopAnswering()" class="stop-btn" id="stop-btn" style="display:none;">
+                                ⏹️ Yanıtlamayı Bitir
+                            </button>
+                            <button onclick="resetLevelTest()" class="level-reset-btn">
+                                🔄 Testi Yeniden Başlat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Results -->
+                <div id="level-test-results" class="level-test-section" style="display:none;">
+                    <div class="results-container">
+                        <h3>🎉 Test Tamamlandı!</h3>
+                        <div class="result-card">
+                            <div class="result-level">
+                                <span id="final-level">B2</span>
+                            </div>
+                            <p id="level-description">Orta seviye İngilizce konuşma becerisine sahipsiniz.</p>
+                        </div>
+                        <div class="result-stats">
+                            <div class="stat-item">
+                                <div class="stat-number" id="accuracy-score">85%</div>
+                                <div class="stat-label">Doğruluk</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="fluency-score">78%</div>
+                                <div class="stat-label">Akıcılık</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="vocabulary-score">82%</div>
+                                <div class="stat-label">Kelime Bilgisi</div>
+                            </div>
+                        </div>
+                        <button onclick="resetLevelTest()" class="level-test-btn">
+                            🔄 Yeni Test Başlat
+                        </button>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">B2</div>
+                        <div class="stat-label">Mevcut Seviye</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Seviye Tamamlanma</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI ile Planla -->
+        <div id="ai-plan" class="content-section">
+            <div class="section-card">
+                <h3 class="section-title">
+                    <span class="section-icon">🤖</span>
+                    AI ile Her Şeyini Planla
+                </h3>
+                <p>Yapay zeka destekli kişiselleştirilmiş öğrenme planı oluştur!</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 25%"></div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Aktif Plan</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">91%</div>
+                        <div class="stat-label">Plan Uyumluluğu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked link
+                link.classList.add('active');
+
+                // Show corresponding section
+                const targetSection = link.getAttribute('data-section');
+                const section = document.getElementById(targetSection);
+                if (section) {
+                    section.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth animations for cards
+        const cards = document.querySelectorAll('.section-card');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Start button functionality
+        const startBtn = document.querySelector('.start-btn');
+        startBtn.addEventListener('click', () => {
+            // Navigate to VocabLitz section
+            navLinks.forEach(l => l.classList.remove('active'));
+            contentSections.forEach(section => section.classList.remove('active'));
+
+            document.querySelector('[data-section="vocablitz"]').classList.add('active');
+            document.getElementById('vocablitz').classList.add('active');
+        });
+
+        // Roleplay functionality
+        let recognition;
+        let micActive = false;
+        let isSpeaking = false;
+
+        async function startRoleplay() {
+            const level = document.getElementById("level").value;
+            const prompt = document.getElementById("prompt").value;
+
+            if (!prompt.trim()) {
+                alert("Lütfen roleplay senaryosunu açıklayın.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/start-roleplay", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ seviye: level, prompt: prompt })
+                });
+
+                const data = await response.json();
+                console.log("✅ Roleplay response:", data);
+
+                // Switch to chat interface
+                document.getElementById("roleplay-setup").style.display = "none";
+                document.getElementById("roleplay-chat").style.display = "block";
+
+                // Add initial message
+                addToChat("🤖", data.reply);
+                speakText(data.reply);
+
+                // Start voice recognition
+                startRecognition();
+            } catch (error) {
+                console.error("Roleplay başlatma hatası:", error);
+                alert("Roleplay başlatılırken bir hata oluştu.");
+            }
+        }
+
+        function startRecognition() {
+            if (!("webkitSpeechRecognition" in window)) {
+                alert("Tarayıcınız ses girişini desteklemiyor (Chrome kullanmayı deneyin)");
+                return;
+            }
+
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = "en-US";
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                console.log("🎤 Dinliyorum...");
+                // AI konuşuyorsa durdur
+                if (isSpeaking) {
+                    window.speechSynthesis.cancel();
+                    isSpeaking = false;
+                }
+            };
+
+            recognition.onresult = async (event) => {
+                const transcript = event.results[0][0].transcript.trim();
+                console.log("🎤 Algılanan:", transcript);
+
+                // Çok kısa metinleri filtrele
+                if (transcript.length < 3) return;
+
+                sendMessageToAI(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                console.log("🎤 Hata:", event.error);
+            };
+
+            recognition.onend = () => {
+                // Mikrofon aktifse tekrar başlat
+                if (micActive) {
+                    setTimeout(() => recognition.start(), 500);
+                }
+            };
+
+            recognition.start();
+            micActive = true;
+            updateMicButton();
+        }
+
+        function toggleMic() {
+            if (!recognition) return;
+
+            if (micActive) {
+                recognition.stop();
+                micActive = false;
+            } else {
+                recognition.start();
+                micActive = true;
+            }
+            updateMicButton();
+        }
+
+        function updateMicButton() {
+            const micBtn = document.getElementById('mic-btn');
+            if (micActive) {
+                micBtn.textContent = "🎙️ Mikrofonu Kapat";
+                micBtn.classList.add('active');
+            } else {
+                micBtn.textContent = "🎙️ Mikrofonu Aç";
+                micBtn.classList.remove('active');
+            }
+        }
+
+        function resetRoleplay() {
+            // Stop recognition
+            if (recognition) {
+                recognition.stop();
+                micActive = false;
+                updateMicButton();
+            }
+
+            // Clear chat
+            document.getElementById("chat-box").innerHTML = "";
+
+            // Switch back to setup
+            document.getElementById("roleplay-setup").style.display = "block";
+            document.getElementById("roleplay-chat").style.display = "none";
+        }
+
+        function addToChat(who, text) {
+            const box = document.getElementById("chat-box");
+            const timestamp = new Date().toLocaleTimeString();
+            box.innerHTML += `<div style="margin-bottom: 10px;">
+                <strong>${who}</strong> <span style="color: #666; font-size: 0.8em;">(${timestamp})</span><br>
+                ${text}
+            </div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendMessageToAI(message) {
+            addToChat("🧑", message);
+
+            try {
+                const response = await fetch("/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                addToChat("🤖", data.reply);
+                speakText(data.reply);
+            } catch (error) {
+                console.error("Mesaj gönderme hatası:", error);
+                addToChat("❌", "Mesaj gönderilirken hata oluştu.");
+            }
+        }
+
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "en-US";
+            utterance.rate = 0.9;
+            isSpeaking = true;
+            utterance.onend = () => { isSpeaking = false; };
+            speechSynthesis.speak(utterance);
+        }
+
+        // Level Test Variables
+        let levelRecognition;
+        let levelMicActive = false;
+        let currentQuestionIndex = 0;
+        let testAnswers = [];
+        let currentLevel = 'A1';
+
+
+
+        async function startLevelTest() {
+            currentQuestionIndex = 0;
+            testAnswers = [];
+            currentLevel = 'A1';
+
+            // Switch to test interface
+            document.getElementById("level-test-setup").style.display = "none";
+            document.getElementById("level-test-chat").style.display = "block";
+            document.getElementById("level-test-results").style.display = "none";
+
+            // Start AI level test
+            try {
+                const response = await fetch("/start-level-test", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+                addToLevelChat("🤖", data.reply);
+                speakText(data.reply);
+
+                // Enable answer button
+                document.getElementById("answer-btn").disabled = false;
+                document.getElementById("answer-btn").style.display = "block";
+                document.getElementById("stop-btn").style.display = "none";
+            } catch (error) {
+                console.error("Level test başlatma hatası:", error);
+                alert("Level test başlatılırken hata oluştu.");
+            }
+        }
+
+        function updateTestProgress(questionNumber) {
+            const progress = (questionNumber / 3) * 100;
+            document.getElementById("current-question").textContent = `Soru ${questionNumber}/3`;
+            document.getElementById("test-progress-fill").style.width = `${progress}%`;
+        }
+
+        function parseAndShowResults(aiResponse) {
+            // Parse AI response to extract level and details
+            const lines = aiResponse.split('\n');
+            let level = 'B1';
+            let description = '';
+            let errors = '';
+            let improvements = '';
+
+            lines.forEach(line => {
+                if (line.startsWith('SEVİYE:')) {
+                    level = line.replace('SEVİYE:', '').trim();
+                } else if (line.startsWith('AÇIKLAMA:')) {
+                    description = line.replace('AÇIKLAMA:', '').trim();
+                } else if (line.startsWith('HATALAR:')) {
+                    errors = line.replace('HATALAR:', '').trim();
+                } else if (line.startsWith('GELİŞİM:')) {
+                    improvements = line.replace('GELİŞİM:', '').trim();
+                }
+            });
+
+            // Update results display
+            document.getElementById("final-level").textContent = level;
+            document.getElementById("level-description").textContent = description;
+
+            // Calculate random scores based on level
+            const levelScores = {
+                'A1': { min: 60, max: 75 },
+                'A2': { min: 70, max: 85 },
+                'B1': { min: 75, max: 90 },
+                'B2': { min: 80, max: 95 },
+                'C1': { min: 85, max: 98 },
+                'C2': { min: 90, max: 100 }
+            };
+
+            const scoreRange = levelScores[level] || levelScores['B1'];
+            const accuracyScore = Math.floor(Math.random() * (scoreRange.max - scoreRange.min)) + scoreRange.min;
+            const fluencyScore = Math.floor(Math.random() * (scoreRange.max - scoreRange.min)) + scoreRange.min;
+            const vocabularyScore = Math.floor(Math.random() * (scoreRange.max - scoreRange.min)) + scoreRange.min;
+
+            document.getElementById("accuracy-score").textContent = accuracyScore + '%';
+            document.getElementById("fluency-score").textContent = fluencyScore + '%';
+            document.getElementById("vocabulary-score").textContent = vocabularyScore + '%';
+
+            // Show results
+            document.getElementById("level-test-chat").style.display = "none";
+            document.getElementById("level-test-results").style.display = "block";
+        }
+
+        let currentAnswer = '';
+        let isRecording = false;
+        let allTranscripts = [];
+
+        function startAnswering() {
+            if (!("webkitSpeechRecognition" in window)) {
+                alert("Tarayıcınız ses girişini desteklemiyor (Chrome kullanmayı deneyin)");
+                return;
+            }
+
+            levelRecognition = new webkitSpeechRecognition();
+            levelRecognition.lang = "en-US";
+            levelRecognition.continuous = true;
+            levelRecognition.interimResults = true;
+
+            allTranscripts = [];
+            currentAnswer = '';
+            isRecording = true;
+
+            document.getElementById("answer-btn").style.display = "none";
+            document.getElementById("stop-btn").style.display = "block";
+
+            addToLevelChat("🎤", "Yanıtlamaya başladınız... (konuşun)");
+
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+            }
+
+            levelRecognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        allTranscripts.push(transcript);
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                // Güncel birikmiş metni göster
+                const combined = (allTranscripts.join(' ') + ' ' + interimTranscript).trim();
+                currentAnswer = combined;
+                const lastMessage = document.querySelector('#level-chat-box div:last-child');
+                if (lastMessage && lastMessage.textContent.includes('Yanıtlamaya başladınız')) {
+                    lastMessage.innerHTML = `<strong>🧑</strong> <span style=\"color: #666; font-size: 0.8em;\">(${new Date().toLocaleTimeString()})</span><br>${currentAnswer}`;
+                } else {
+                    addToLevelChat("🧑", currentAnswer);
+                }
+            };
+
+            levelRecognition.onerror = (event) => {
+                console.log("🎤 Level test hatası:", event.error);
+            };
+
+            levelRecognition.onend = () => {
+                if (isRecording) {
+                    setTimeout(() => levelRecognition.start(), 500);
+                }
+            };
+
+            levelRecognition.start();
+        }
+
+        function stopAnswering() {
+            if (levelRecognition) {
+                isRecording = false;
+                levelRecognition.stop();
+                document.getElementById("answer-btn").style.display = "block";
+                document.getElementById("stop-btn").style.display = "none";
+                addToLevelChat("⏹️", "Yanıtlamayı bitirdiniz.");
+                // Sadece burada gönder
+                if (currentAnswer && currentAnswer.trim().length > 0) {
+                    sendAnswerToAI(currentAnswer.trim());
+                } else {
+                    addToLevelChat("❌", "Yanıt algılanamadı. Lütfen tekrar deneyin.");
+                }
+            }
+        }
+
+        function updateLevelMicButton() {
+            const answerBtn = document.getElementById('answer-btn');
+            if (levelMicActive) {
+                answerBtn.textContent = "🎙️ Mikrofonu Kapat";
+                answerBtn.classList.add('active');
+            } else {
+                answerBtn.textContent = "🎤 Yanıtlamaya Başla";
+                answerBtn.classList.remove('active');
+            }
+        }
+
+        async function sendAnswerToAI(answer) {
+            console.log("🤖 AI'ya gönderiliyor:", answer);
+            try {
+                const response = await fetch("/level-test-answer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answer: answer })
+                });
+
+                const data = await response.json();
+                console.log("🤖 AI yanıtı:", data);
+
+                if (data.completed) {
+                    // Test completed, show results
+                    addToLevelChat("🤖", data.reply);
+                    speakText(data.reply);
+
+                    // Parse and display results
+                    setTimeout(() => parseAndShowResults(data.reply), 3000);
+                } else {
+                    // Next question
+                    addToLevelChat("🤖", data.reply);
+                    speakText(data.reply);
+                    updateTestProgress(data.question_number);
+
+                    // Re-enable answer button for next question
+                    document.getElementById("answer-btn").disabled = false;
+                }
+            } catch (error) {
+                console.error("Level test cevap hatası:", error);
+                addToLevelChat("❌", "Cevap gönderilirken hata oluştu.");
+                // Re-enable answer button on error
+                document.getElementById("answer-btn").disabled = false;
+            }
+        }
+
+
+
+        function resetLevelTest() {
+            if (levelRecognition) {
+                levelRecognition.stop();
+                isRecording = false;
+            }
+
+            currentAnswer = '';
+            document.getElementById("level-chat-box").innerHTML = "";
+            document.getElementById("answer-btn").style.display = "block";
+            document.getElementById("stop-btn").style.display = "none";
+            document.getElementById("level-test-setup").style.display = "block";
+            document.getElementById("level-test-chat").style.display = "none";
+            document.getElementById("level-test-results").style.display = "none";
+        }
+
+        function addToLevelChat(who, text) {
+            const box = document.getElementById("level-chat-box");
+            const timestamp = new Date().toLocaleTimeString();
+            box.innerHTML += `<div style="margin-bottom: 10px;">
+                <strong>${who}</strong> <span style="color: #666; font-size: 0.8em;">(${timestamp})</span><br>
+                ${text}
+            </div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

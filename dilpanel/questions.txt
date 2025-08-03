@@ -1,0 +1,59 @@
+A1_QUESTIONS:
+What is your name?
+How old are you?
+Where do you live?
+What is your favorite color?
+Do you like music?
+What time do you wake up?
+How many people are in your family?
+What is your favorite food?
+Do you have a pet?
+What is your job?
+
+A2_QUESTIONS:
+Tell me about your family.
+What do you do in your free time?
+Describe your house or apartment.
+What did you do last weekend?
+What is your favorite food and why?
+What is your hometown like?
+What are your hobbies?
+Describe your best friend.
+What do you usually do on weekends?
+What is your favorite season and why?
+
+B1_QUESTIONS:
+What are your plans for the future?
+Describe a memorable experience you had.
+What do you think about technology?
+Tell me about your hometown.
+What would you do if you won the lottery?
+What are your career goals?
+Describe a book or movie you recently enjoyed.
+What do you think about social media?
+What is your dream vacation?
+How has technology changed your life?
+
+B2_QUESTIONS:
+Discuss the advantages and disadvantages of social media.
+What are your views on climate change?
+Describe a book or movie that influenced you.
+What makes a good leader?
+How has technology changed education?
+What are the challenges of learning a new language?
+Discuss the importance of work-life balance.
+What do you think about remote work?
+How do you think society will change in the next 20 years?
+What are the benefits and drawbacks of globalization?
+
+C1_QUESTIONS:
+Analyze the impact of globalization on local cultures.
+What are the ethical implications of artificial intelligence?
+Discuss the role of government in healthcare.
+How do you think society will change in the next 50 years?
+What are the challenges of maintaining work-life balance?
+Analyze the effects of social media on mental health.
+Discuss the future of education in the digital age.
+What are the implications of automation on employment?
+How should we address income inequality?
+What are the environmental challenges facing our generation? 
